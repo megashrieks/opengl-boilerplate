@@ -30,7 +30,6 @@ GLuint createShader(std::string& shader,GLenum type){
         glGetShaderInfoLog(id,length,&length,message);
         std::cout << "Failed to compile "<<(type == GL_VERTEX_SHADER ? "vertex" : "fragment") << "shader"<<std::endl;
         std::cout << message << std::endl;
-
     }
 
     return id;
@@ -65,11 +64,6 @@ int main(void)
 
 
     // Create a buffer
-    // float vertices[] = {
-    //     -0.5,-0.5,
-    //      0,0.5,
-    //      0.5,-0.5
-    // };
     int no_of_vertices = 6;
     float vertices[] = {
         -1.0,-1.0,
@@ -108,11 +102,12 @@ int main(void)
     
 
 
-
+    float time = 0.0;
     // /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
+        time += 0.01;
         glClear(GL_COLOR_BUFFER_BIT);
 
         glDrawArrays(GL_TRIANGLES,0,no_of_vertices);

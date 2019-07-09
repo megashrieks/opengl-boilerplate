@@ -10,7 +10,7 @@ Edit the basic.frag or create a seperate fragment shader file and include it in 
 
 - [GLUT](https://www.glfw.org/https://www.glfw.org/)
 
-- [GLEW]([https://www.glfw.org/](https://www.glfw.org/))
+- [GLEW](http://glew.sourceforge.net/)
 
 I do the compilation of the file in linux. So I had to build GLFW and GLEW from the source.
 You can see the building of those projects in their respective sites.
