@@ -67,10 +67,10 @@ int main(void)
     int no_of_vertices = 8;
     int no_of_indices = 6;
     float vertices[] = {
-        -0.5,-0.5,
-        0.5,0.5,
-        -0.5,0.5,
-        0.5,-0.5
+        -1,-1,
+        1,1,
+        -1,1,
+        1,-1
     };
     unsigned int indices[] = {
         0,1,2,
@@ -109,11 +109,14 @@ int main(void)
     glLinkProgram(program);
     glUseProgram(program);
     
-
+    unsigned int time_location = glGetUniformLocation(program,"u_Time");
+    float time = 0;
 
     // /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
+        glUniform1f(time_location,time);
+        time += 0.001;
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 

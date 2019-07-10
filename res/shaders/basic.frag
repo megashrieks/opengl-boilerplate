@@ -1,5 +1,7 @@
 #version 330 core
 
+uniform float u_Time;
+
 out vec4 color;
 
 #define PI 3.142857
@@ -9,7 +11,7 @@ float circle(vec2 _st,float radius){
 void main()
 {
     vec2 uv = gl_FragCoord.xy / 50.0;
-    float t = 1, // insert time here 
+    float t = u_Time, // insert time here 
         x_offset =- cos(mod(t,PI)),
         y_offset =- cos(mod(t-PI/2.,PI));
     
