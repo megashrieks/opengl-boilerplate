@@ -64,26 +64,35 @@ int main(void)
 
 
     // Create a buffer
-    int no_of_vertices = 6;
+    int no_of_vertices = 8;
+    int no_of_indices = 6;
     float vertices[] = {
-        -1.0,-1.0,
-        -1.0,1.0,
-        1.0,1.0,
-
-        1.0,1.0,
-        -1.0,-1.0,
-        1.0,-1.0
+        -0.5,-0.5,
+        0.5,0.5,
+        -0.5,0.5,
+        0.5,-0.5
+    };
+    unsigned int indices[] = {
+        0,1,2,
+        0,1,3
     };
     GLuint my_buffer;
     glGenBuffers(1,&my_buffer);
     glBindBuffer(GL_ARRAY_BUFFER,my_buffer);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(float)*no_of_vertices*2,vertices,GL_STATIC_DRAW);
-
-
-
+    glBufferData(GL_ARRAY_BUFFER,sizeof(float) * no_of_vertices * 2,vertices,GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,sizeof(float)*2,0);
+
+
+    unsigned int ibo;
+    glGenBuffers(1,&ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indices),indices,GL_STATIC_DRAW);
+
+
+
+
 
 
     //create and attach shaders
@@ -102,17 +111,15 @@ int main(void)
     
 
 
-    float time = 0.0;
     // /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Render here */
-        time += 0.01;
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLES,0,no_of_vertices);
+        glDrawElements(GL_TRIANGLES,no_of_indices,GL_UNSIGNED_INT,nullptr);
 
-
+        // glDrawArrays(GL_TRIANGLES,0,3);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
