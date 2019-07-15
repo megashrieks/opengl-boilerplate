@@ -6,6 +6,22 @@
 #include <GL/glut.h>
 #include <GLFW/glfw3.h>
 
+#include "VertexBuffer.h"
+void GLAPIENTRY
+MessageCallback( GLenum source,
+                 GLenum type,
+                 GLuint id,
+                 GLenum severity,
+                 GLsizei length,
+                 const GLchar* message,
+                 const void* userParam )
+{
+  fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+            type, severity, message );
+}
+
+
 std::stringstream get_file(std::string path){
     std::stringstream result;
     std::ifstream stream(path);
@@ -39,19 +55,18 @@ int main(void)
 {
     GLFWwindow* window;
 
-    // /* Initialize the library */
     
     if (!glfwInit())
         return -1;
 
-    // /* Create a windowed mode window and its OpenGL context */
+    /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
         return -1;
     }
-    // /* Make the window's context current */
+    /* Make the window's context current */
     glfwMakeContextCurrent(window);
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR,3);
@@ -66,8 +81,11 @@ int main(void)
     }
 
 
+    glEnable              ( GL_DEBUG_OUTPUT );
+    glDebugMessageCallback( MessageCallback, 0 );
+
     // Create a buffer
-    int no_of_vertices = 8;
+    unsigned int no_of_vertices = 8;
     int no_of_indices = 6;
     float vertices[] = {
         -1,-1,
@@ -75,31 +93,30 @@ int main(void)
         -1,1,
         1,-1
     };
+    float vertices2[] = {
+        -1,-1,
+        1,1,
+        -1,1,
+        1,-0.8
+    };
     unsigned int indices[] = {
         0,1,2,
         0,1,3
     };
 
-    GLuint vertex_arr;
-    glGenVertexArrays(1,&vertex_arr);
-    glBindVertexArray(vertex_arr);
 
-    GLuint my_buffer;
-    glGenBuffers(1,&my_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER,my_buffer);
-    glBufferData(GL_ARRAY_BUFFER,sizeof(float) * no_of_vertices * 2,vertices,GL_STATIC_DRAW);
+    VertexBuffer vb;
+    vb.addData(vertices,no_of_vertices,2);
 
-
-
+    VertexBuffer vb1 = VertexBuffer();
+    vb1.addData(vertices2,no_of_vertices,2);
+    vb1.bind();
     unsigned int ibo;
     glGenBuffers(1,&ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indices),indices,GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indices),indices,GL_DYNAMIC_DRAW);
+    vb1.unbind();
 
-
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0,2,GL_FLOAT,GL_FALSE,sizeof(float)*2,0);
 
 
 
@@ -121,10 +138,10 @@ int main(void)
     float time = 0;
 
     // glUseProgram(0);
+    // glBindVertexArray(0);
     // glBindBuffer(GL_ARRAY_BUFFER,0);
     // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
-    glBindVertexArray(0);
-
+    vb1.bind();
     while (!glfwWindowShouldClose(window))
     {
         glUniform1f(time_location,time);
@@ -132,11 +149,8 @@ int main(void)
 
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
-        glBindVertexArray(vertex_arr);
-        glBufferData(GL_ARRAY_BUFFER,sizeof(float) * no_of_vertices * 2,vertices,GL_STATIC_DRAW);
-
+        // glBindVertexArray(vertex_arr);
         glDrawElements(GL_TRIANGLES,no_of_indices,GL_UNSIGNED_INT,nullptr);
-
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

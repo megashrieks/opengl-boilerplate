@@ -6,7 +6,7 @@
         {
             "label": "compile",
             "type": "shell",
-            "command": "g++ Application.cpp -g -lGLEW -lglut -lglfw3 -lGL -lX11 -lpthread -ldl"
+            "command": "g++ ./lib/VertexBuffer.cpp Application.cpp -g -lGLEW -lglut -lglfw3 -lGL -lX11 -lpthread -ldl -I ./lib"
         }
     ]
 }
