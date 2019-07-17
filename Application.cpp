@@ -107,16 +107,12 @@ int main(void)
 
     VertexBuffer vb;
     vb.addData(vertices,no_of_vertices,2);
-
-    VertexBuffer vb1 = VertexBuffer();
-    vb1.addData(vertices2,no_of_vertices,2);
-    vb1.bind();
+    vb.bind();
     unsigned int ibo;
     glGenBuffers(1,&ibo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,sizeof(indices),indices,GL_DYNAMIC_DRAW);
-    vb1.unbind();
-
+    vb.unbind();
 
 
 
@@ -141,7 +137,7 @@ int main(void)
     // glBindVertexArray(0);
     // glBindBuffer(GL_ARRAY_BUFFER,0);
     // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
-    vb1.bind();
+    vb.bind();
     while (!glfwWindowShouldClose(window))
     {
         glUniform1f(time_location,time);
